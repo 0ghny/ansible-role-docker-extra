@@ -1,0 +1,8 @@
+[Unit]
+Description=Docker cleanup timer
+
+[Timer]
+OnUnitInactiveSec={{ docker_extra_cleanup_interval }}
+
+[Install]
+WantedBy=timers.target

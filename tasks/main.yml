@@ -1,0 +1,39 @@
+- name: Docker Extra | create custom docker config folder
+  ansible.builtin.file:
+    path: "{{ docker_extra_dir }}"
+    state: directory
+    owner: "{{ docker_extra_owner }}"
+    group: "{{ docker_extra_group }}"
+    mode: "0755"
+
+- name: Docker Extra | copy docker config folder
+  ansible.builtin.template:
+    src: "{{ item }}.j2"
+    dest: "{{ docker_extra_dir }}/{{ item }}"
+    owner: "{{ docker_extra_owner }}"
+    group: "{{ docker_extra_group }}"
+    mode: "0755"
+  with_items:
+    - docker-cleanup.service
+    - docker-cleanup.timer
+
+- name: Docker Extra | link docker service and timer to systemd folder
+  ansible.builtin.file:
+    src: "{{ docker_extra_dir }}/{{ item }}"
+    dest: "/etc/systemd/system/{{ item }}"
+    state: link
+    owner: root
+    group: root
+    mode: "0644"
+  with_items:
+    - docker-cleanup.service
+    - docker-cleanup.timer
+
+- name: Docker Extra | register docker-cleanup service and timer
+  ansible.builtin.systemd:
+    enabled: true
+    name: "{{ item }}"
+    state: started
+  with_items:
+    - docker-cleanup.service
+    - docker-cleanup.timer

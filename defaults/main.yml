@@ -1,0 +1,11 @@
+---
+docker_extra_dir: "/opt/docker-extra"
+# if you want to change the owner and group of the docker_extra_dir
+docker_extra_owner: "{{ ansible_user }}"
+# if you want to change the owner and group of the docker_extra_dir
+docker_extra_group: "{{ ansible_user }}"
+
+# cleanup settings
+# interval for the docker cleanup service
+docker_extra_cleanup_interval: "12h"
+docker_extra_cleanup_docker_bin: "/usr/bin/docker"
